@@ -102,7 +102,7 @@ function setLaunchEnabled(val){
 
 // Bind launch button
 document.getElementById('launch_button').addEventListener('click', async e => {
-    loggerLanding.info('Launching game..')
+    loggerLanding.info('게임 실행중..')
     try {
         const server = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
         const jExe = ConfigManager.getJavaExecutable(ConfigManager.getSelectedServer())
@@ -124,8 +124,8 @@ document.getElementById('launch_button').addEventListener('click', async e => {
             }
         }
     } catch(err) {
-        loggerLanding.error('Unhandled error in during launch process.', err)
-        showLaunchFailure('Error During Launch', 'See console (CTRL + Shift + i) for more details.')
+        loggerLanding.error('ERROR : ', err)
+        showLaunchFailure('실행 중 오류 발생', '(CTRL + Shift + i) 를 눌러 콘솔을 확인하세요')
     }
 })
 
@@ -145,7 +145,7 @@ document.getElementById('avatarOverlay').onclick = async e => {
 
 // Bind selected account
 function updateSelectedAccount(authUser){
-    let username = 'No Account Selected'
+    let username = '계정이 선택되지 않았습니다'
     if(authUser != null){
         if(authUser.displayName != null){
             username = authUser.displayName
@@ -172,7 +172,7 @@ function updateSelectedServer(serv){
     setLaunchEnabled(serv != null)
 }
 // Real text is set in uibinder.js on distributionIndexDone.
-server_selection_button.innerHTML = '\u2022 Loading..'
+server_selection_button.innerHTML = '\u2022 로딩 중..'
 server_selection_button.onclick = async e => {
     e.target.blur()
     await toggleServerSelection(true)
@@ -180,7 +180,7 @@ server_selection_button.onclick = async e => {
 
 // Update Mojang Status Color
 const refreshMojangStatuses = async function(){
-    loggerLanding.info('Refreshing Mojang Statuses..')
+    loggerLanding.info('Mojang 서버 새로고침 중..')
 
     let status = 'grey'
     let tooltipEssentialHTML = ''
@@ -191,7 +191,7 @@ const refreshMojangStatuses = async function(){
     if(response.responseStatus === RestResponseStatus.SUCCESS) {
         statuses = response.data
     } else {
-        loggerLanding.warn('Unable to refresh Mojang service status.')
+        loggerLanding.warn('Mojang 서버를 새로고침 할 수 없습니다')
         statuses = MojangRestAPI.getDefaultStatuses()
     }
     
@@ -240,7 +240,7 @@ const refreshMojangStatuses = async function(){
 }
 
 const refreshServerStatus = async (fade = false) => {
-    loggerLanding.info('Refreshing Server Status')
+    loggerLanding.info('서버 상태 새로고침 중..')
     const serv = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
 
     let pLabel = 'SERVER'
@@ -304,7 +304,7 @@ function showLaunchFailure(title, desc){
  */
 async function asyncSystemScan(effectiveJavaOptions, launchAfter = true){
 
-    setLaunchDetails('Checking system info..')
+    setLaunchDetails('시스템 정보 확인중..')
     toggleLaunchArea(true)
     setLaunchPercentage(0, 100)
 
@@ -317,30 +317,30 @@ async function asyncSystemScan(effectiveJavaOptions, launchAfter = true){
         // If the result is null, no valid Java installation was found.
         // Show this information to the user.
         setOverlayContent(
-            'No Compatible<br>Java Installation Found',
-            `In order to join WesterosCraft, you need a 64-bit installation of Java ${effectiveJavaOptions.suggestedMajor}. Would you like us to install a copy?`,
-            'Install Java',
-            'Install Manually'
+            'JAVA<br>Java가 설치 되지 않았습니다',
+            `서버에 접속을 위해서는 64비트 Java가 필요합니다 ${effectiveJavaOptions.suggestedMajor}. Java를 설치 하시겠습니까?`,
+            'Java 설치',
+            '수동 설치'
         )
         setOverlayHandler(() => {
-            setLaunchDetails('Preparing Java Download..')
+            setLaunchDetails('Java 설치 준비중..')
             toggleOverlay(false)
             
             try {
                 downloadJava(effectiveJavaOptions, launchAfter)
             } catch(err) {
-                loggerLanding.error('Unhandled error in Java Download', err)
-                showLaunchFailure('Error During Java Download', 'See console (CTRL + Shift + i) for more details.')
+                loggerLanding.error('INSTALL ERROR : ', err)
+                showLaunchFailure('Java 설치 실패', '(CTRL + Shift + i) 를 눌러 콘솔을 확인하세요')
             }
         })
         setDismissHandler(() => {
             $('#overlayContent').fadeOut(250, () => {
                 //$('#overlayDismiss').toggle(false)
                 setOverlayContent(
-                    'Java is Required<br>to Launch',
-                    `A valid x64 installation of Java ${effectiveJavaOptions.suggestedMajor} is required to launch.<br><br>Please refer to our <a href="https://github.com/dscalzi/HeliosLauncher/wiki/Java-Management#manually-installing-a-valid-version-of-java">Java Management Guide</a> for instructions on how to manually install Java.`,
-                    'I Understand',
-                    'Go Back'
+                    'JAVA<br>실행을 위해선 Java가 필요합니다',
+                    `서버 접속을 위해선 유효한 x64 Java ${effectiveJavaOptions.suggestedMajor} 설치가 필요합니다. <br><br>Java를 수동으로 설치하는 방법에 대한 지침은 <a href = "https://github.com/dscalzi/HeliosLauncher/wiki/Java-Management#manually-installing-a-valid-version-of-java">Java 관리 가이드</a>를 참조하십시오.`,
+                    '확인',
+                    '돌아가기'
                 )
                 setOverlayHandler(() => {
                     toggleLaunchArea(false)
@@ -385,7 +385,7 @@ async function downloadJava(effectiveJavaOptions, launchAfter = true) {
         effectiveJavaOptions.distribution)
 
     if(asset == null) {
-        throw new Error('Failed to find OpenJDK distribution.')
+        throw new Error('OpenJDK 배포를 찾지 못했습니다')
     }
 
     let received = 0
@@ -396,11 +396,11 @@ async function downloadJava(effectiveJavaOptions, launchAfter = true) {
     setDownloadPercentage(100)
 
     if(received != asset.size) {
-        loggerLanding.warn(`Java Download: Expected ${asset.size} bytes but received ${received}`)
+        loggerLanding.warn(`Java 다운로드: ${asset.size}바이트가 예상되었지만 ${received}바이트를 받았습니다.`)
         if(!await validateLocalFile(asset.path, asset.algo, asset.hash)) {
-            log.error(`Hashes do not match, ${asset.id} may be corrupted.`)
+            log.error(`해시가 일치하지 않아 ${asset.id} 파일이 손상되었을 수 있습니다.`)
             // Don't know how this could happen, but report it.
-            throw new Error('Downloaded JDK has bad hash, file may be corrupted.')
+            throw new Error('다운로드한 JDK의 해시가 잘못되어 파일이 손상되었을 수 있습니다.')
         }
     }
 
@@ -409,7 +409,7 @@ async function downloadJava(effectiveJavaOptions, launchAfter = true) {
     remote.getCurrentWindow().setProgressBar(2)
 
     // Wait for extration to complete.
-    const eLStr = 'Extracting Java'
+    const eLStr = 'Java 추출중..'
     let dotStr = ''
     setLaunchDetails(eLStr)
     const extractListener = setInterval(() => {
@@ -431,7 +431,7 @@ async function downloadJava(effectiveJavaOptions, launchAfter = true) {
     ConfigManager.save()
 
     clearInterval(extractListener)
-    setLaunchDetails('Java Installed!')
+    setLaunchDetails('Java 설치됨!')
 
     // TODO Callback hell
     // Refactor the launch functions
@@ -456,7 +456,7 @@ async function dlAsync(login = true) {
 
     const loggerLaunchSuite = LoggerUtil.getLogger('LaunchSuite')
 
-    setLaunchDetails('Loading server information..')
+    setLaunchDetails('서버 정보 불러오는 중..')
 
     let distro
 
@@ -464,8 +464,8 @@ async function dlAsync(login = true) {
         distro = await DistroAPI.refreshDistributionOrFallback()
         onDistroRefresh(distro)
     } catch(err) {
-        loggerLaunchSuite.error('Unable to refresh distribution index.', err)
-        showLaunchFailure('Fatal Error', 'Could not load a copy of the distribution index. See the console (CTRL + Shift + i) for more details.')
+        loggerLaunchSuite.error('ERROR : ', err)
+        showLaunchFailure('ERROR', '배포 인덱스의 복사본을 로드할 수 없습니다. (CTRL + Shift + i) 를 눌러 콘솔을 확인하세요')
         return
     }
 
@@ -473,12 +473,12 @@ async function dlAsync(login = true) {
 
     if(login) {
         if(ConfigManager.getSelectedAccount() == null){
-            loggerLanding.error('You must be logged into an account.')
+            loggerLanding.error('계정 로그인이 필요합니다')
             return
         }
     }
 
-    setLaunchDetails('Please wait..')
+    setLaunchDetails('잠시만 기다려 주세요..')
     toggleLaunchArea(true)
     setLaunchPercentage(0, 100)
 
@@ -493,18 +493,18 @@ async function dlAsync(login = true) {
     fullRepairModule.spawnReceiver()
 
     fullRepairModule.childProcess.on('error', (err) => {
-        loggerLaunchSuite.error('Error during launch', err)
-        showLaunchFailure('Error During Launch', err.message || 'See console (CTRL + Shift + i) for more details.')
+        loggerLaunchSuite.error('ERROR : ', err)
+        showLaunchFailure('ERROR', err.message || '(CTRL + Shift + i) 를 눌러 콘솔을 확인하세요')
     })
     fullRepairModule.childProcess.on('close', (code, _signal) => {
         if(code !== 0){
-            loggerLaunchSuite.error(`Full Repair Module exited with code ${code}, assuming error.`)
-            showLaunchFailure('Error During Launch', 'See console (CTRL + Shift + i) for more details.')
+            loggerLaunchSuite.error(`"Full Repair Module이 코드 ${code}로 종료되었습니다. 오류로 간주합니다.`)
+            showLaunchFailure('ERROR', '(CTRL + Shift + i) 를 눌러 콘솔을 확인하세요')
         }
     })
 
-    loggerLaunchSuite.info('Validating files.')
-    setLaunchDetails('Validating file integrity..')
+    loggerLaunchSuite.info('파일 유효성 검사중..')
+    setLaunchDetails('파일 무결성 확인중..')
     let invalidFileCount = 0
     try {
         invalidFileCount = await fullRepairModule.verifyFiles(percent => {
@@ -512,15 +512,15 @@ async function dlAsync(login = true) {
         })
         setLaunchPercentage(100)
     } catch (err) {
-        loggerLaunchSuite.error('Error during file validation.')
-        showLaunchFailure('Error During File Verification', err.displayable || 'See console (CTRL + Shift + i) for more details.')
+        loggerLaunchSuite.error('파일 유효성 검사 중 오류 발생')
+        showLaunchFailure('ERROR', err.displayable || '(CTRL + Shift + i) 를 눌러 콘솔을 확인하세요')
         return
     }
     
 
     if(invalidFileCount > 0) {
-        loggerLaunchSuite.info('Downloading files.')
-        setLaunchDetails('Downloading files..')
+        loggerLaunchSuite.info('파일 설치중..')
+        setLaunchDetails('파일 설치중..')
         setLaunchPercentage(0)
         try {
             await fullRepairModule.download(percent => {
@@ -528,12 +528,12 @@ async function dlAsync(login = true) {
             })
             setDownloadPercentage(100)
         } catch(err) {
-            loggerLaunchSuite.error('Error during file download.')
-            showLaunchFailure('Error During File Download', err.displayable || 'See console (CTRL + Shift + i) for more details.')
+            loggerLaunchSuite.error('파일 설치 중 오류 발생')
+            showLaunchFailure('ERROR', err.displayable || '(CTRL + Shift + i) 를 눌러 콘솔을 확인하세요')
             return
         }
     } else {
-        loggerLaunchSuite.info('No invalid files, skipping download.')
+        loggerLaunchSuite.info('유효하지 않은 파일, 다운로드 건너뜀')
     }
 
     // Remove download bar.
@@ -541,7 +541,7 @@ async function dlAsync(login = true) {
 
     fullRepairModule.destroyReceiver()
 
-    setLaunchDetails('Preparing to launch..')
+    setLaunchDetails('실행 준비중..')
 
     const mojangIndexProcessor = new MojangIndexProcessor(
         ConfigManager.getCommonDirectory(),
@@ -557,9 +557,9 @@ async function dlAsync(login = true) {
 
     if(login) {
         const authUser = ConfigManager.getSelectedAccount()
-        loggerLaunchSuite.info(`Sending selected account (${authUser.displayName}) to ProcessBuilder.`)
+        loggerLaunchSuite.info(`"선택한 계정(${authUser.displayName})을 ProcessBuilder로 보냅니다.`)
         let pb = new ProcessBuilder(serv, versionData, forgeData, authUser, remote.app.getVersion())
-        setLaunchDetails('Launching game..')
+        setLaunchDetails('게임 실행중..')
 
         // const SERVER_JOINED_REGEX = /\[.+\]: \[CHAT\] [a-zA-Z0-9_]{1,16} joined the game/
         const SERVER_JOINED_REGEX = new RegExp(`\\[.+\\]: \\[CHAT\\] ${authUser.displayName} joined the game`)
@@ -567,7 +567,7 @@ async function dlAsync(login = true) {
         const onLoadComplete = () => {
             toggleLaunchArea(false)
             if(hasRPC){
-                DiscordWrapper.updateDetails('Loading game..')
+                DiscordWrapper.updateDetails('게임 로딩중..')
                 proc.stdout.on('data', gameStateChange)
             }
             proc.stdout.removeListener('data', tempListener)
@@ -594,17 +594,17 @@ async function dlAsync(login = true) {
         const gameStateChange = function(data){
             data = data.trim()
             if(SERVER_JOINED_REGEX.test(data)){
-                DiscordWrapper.updateDetails('Exploring the Realm!')
+                DiscordWrapper.updateDetails('Realm 탐험중!')
             } else if(GAME_JOINED_REGEX.test(data)){
-                DiscordWrapper.updateDetails('Sailing to Westeros!')
+                DiscordWrapper.updateDetails('문구 작성')
             }
         }
 
         const gameErrorListener = function(data){
             data = data.trim()
-            if(data.indexOf('Could not find or load main class net.minecraft.launchwrapper.Launch') > -1){
-                loggerLaunchSuite.error('Game launch failed, LaunchWrapper was not downloaded properly.')
-                showLaunchFailure('Error During Launch', 'The main file, LaunchWrapper, failed to download properly. As a result, the game cannot launch.<br><br>To fix this issue, temporarily turn off your antivirus software and launch the game again.<br><br>If you have time, please <a href="https://github.com/dscalzi/HeliosLauncher/issues">submit an issue</a> and let us know what antivirus software you use. We\'ll contact them and try to straighten things out.')
+            if(data.indexOf('기본 클래스 net.minecraft.launchwrapper.Launch를 찾거나 로드할 수 없습니다.') > -1){
+                loggerLaunchSuite.error('ERROR, LaunchWrapper가 제대로 다운로드되지 않음.')
+                showLaunchFailure('ERROR', '주요 파일인 LaunchWrapper가 제대로 다운로드되지 않았습니다. 따라서 게임을 실행할 수 없습니다. <br><br>이 문제를 해결하려면 일시적으로 안티바이러스 소프트웨어를 비활성화한 후 게임을 다시 실행해 주세요. <br><br> 시간이 있다면, <a href="https://github.com/dscalzi/HeliosLauncher/issues">문제 제출</a>을 통해 어떤 안티바이러스 소프트웨어를 사용하는지 알려주세요. 저희가 해당 회사에 연락하여 문제를 해결하려고 시도하겠습니다.')
             }
         }
 
@@ -616,14 +616,14 @@ async function dlAsync(login = true) {
             proc.stdout.on('data', tempListener)
             proc.stderr.on('data', gameErrorListener)
 
-            setLaunchDetails('Done. Enjoy the server!')
+            setLaunchDetails('설치 완료!')
 
             // Init Discord Hook
             if(distro.rawDistribution.discord != null && serv.rawServerdiscord != null){
                 DiscordWrapper.initRPC(distro.rawDistribution.discord, serv.rawServer.discord)
                 hasRPC = true
                 proc.on('close', (code, signal) => {
-                    loggerLaunchSuite.info('Shutting down Discord Rich Presence..')
+                    loggerLaunchSuite.info('Discord Rich Presence를 종료합니다..')
                     DiscordWrapper.shutdownRPC()
                     hasRPC = false
                     proc = null
@@ -632,8 +632,8 @@ async function dlAsync(login = true) {
 
         } catch(err) {
 
-            loggerLaunchSuite.error('Error during launch', err)
-            showLaunchFailure('Error During Launch', 'Please check the console (CTRL + Shift + i) for more details.')
+            loggerLaunchSuite.error('ERROR', err)
+            showLaunchFailure('ERROR', '(CTRL + Shift + i) 를 눌러 콘솔을 확인하세요')
 
         }
     }
@@ -740,7 +740,7 @@ let newsLoadingListener = null
  */
 function setNewsLoading(val){
     if(val){
-        const nLStr = 'Checking for News'
+        const nLStr = '뉴스 확인중'
         let dotStr = '..'
         nELoadSpan.innerHTML = nLStr + dotStr
         newsLoadingListener = setInterval(() => {
@@ -967,7 +967,7 @@ async function loadNews(){
 
     const distroData = await DistroAPI.getDistribution()
     if(!distroData.rawDistribution.rss) {
-        loggerLanding.debug('No RSS feed provided.')
+        loggerLanding.debug('RSS 피드가 제공되지 않습니다.')
         return null
     }
 

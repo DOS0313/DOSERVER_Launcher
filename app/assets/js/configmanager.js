@@ -7,7 +7,7 @@ const logger = LoggerUtil.getLogger('ConfigManager')
 
 const sysRoot = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : process.env.HOME)
 
-const dataPath = path.join(sysRoot, '.helioslauncher')
+const dataPath = path.join(sysRoot, '.doserver')
 
 const launcherDir = require('@electron/remote').app.getPath('userData')
 
@@ -140,8 +140,8 @@ exports.load = function(){
             doValidate = true
         } catch (err){
             logger.error(err)
-            logger.info('Configuration file contains malformed JSON or is corrupt.')
-            logger.info('Generating a new configuration file.')
+            logger.info('구성 파일에 잘못된 형식의 JSON이 포함되어 있거나 손상되었습니다.')
+            logger.info('새 구성 파일 생성')
             fs.ensureDirSync(path.join(configPath, '..'))
             config = DEFAULT_CONFIG
             exports.save()
@@ -151,7 +151,7 @@ exports.load = function(){
             exports.save()
         }
     }
-    logger.info('Successfully Loaded')
+    logger.info('로딩 완료')
 }
 
 /**

@@ -23,7 +23,7 @@ DistroAPI['commonDir'] = ConfigManager.getCommonDirectory()
 DistroAPI['instanceDir'] = ConfigManager.getInstanceDirectory()
 
 // Load Strings
-LangLoader.loadLanguage('en_US')
+LangLoader.loadLanguage('ko_KR')
 
 /**
  * 
@@ -34,7 +34,7 @@ function onDistroLoad(data){
         
         // Resolve the selected server if its value has yet to be set.
         if(ConfigManager.getSelectedServer() == null || data.getServerById(ConfigManager.getSelectedServer()) == null){
-            logger.info('Determining default selected server..')
+            logger.info('기본 선택 서버 결정중..')
             ConfigManager.setSelectedServer(data.getMainServer().rawServer.id)
             ConfigManager.save()
         }
@@ -50,8 +50,8 @@ DistroAPI.getDistribution()
         onDistroLoad(heliosDistro)
     })
     .catch(err => {
-        logger.info('Failed to load an older version of the distribution index.')
-        logger.info('Application cannot run.')
+        logger.info('배포 색인의 이전 버전을 로드하지 못했습니다.')
+        logger.info('응용 프로그램을 실행할 수 없습니다.')
         logger.error(err)
 
         onDistroLoad(null)
@@ -60,8 +60,8 @@ DistroAPI.getDistribution()
 // Clean up temp dir incase previous launches ended unexpectedly. 
 fs.remove(path.join(os.tmpdir(), ConfigManager.getTempNativeFolder()), (err) => {
     if(err){
-        logger.warn('Error while cleaning natives directory', err)
+        logger.warn('ERROR : ', err)
     } else {
-        logger.info('Cleaned natives directory.')
+        logger.info('디렉토리 정리 완료')
     }
 })

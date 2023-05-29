@@ -39,7 +39,7 @@ class ProcessBuilder {
         const tempNativePath = path.join(os.tmpdir(), ConfigManager.getTempNativeFolder(), crypto.pseudoRandomBytes(16).toString('hex'))
         process.throwDeprecation = true
         this.setupLiteLoader()
-        logger.info('Using liteloader:', this.usingLiteLoader)
+        logger.info('라이트로더 사용:', this.usingLiteLoader)
         const modObj = this.resolveModConfiguration(ConfigManager.getModConfiguration(this.server.rawServer.id).mods, this.server.modules)
         
         // Mod list below 1.13
@@ -58,7 +58,7 @@ class ProcessBuilder {
             args = args.concat(this.constructModList(modObj.fMods))
         }
 
-        logger.info('Launch Arguments:', args)
+        logger.info('실행 인수:', args)
 
         const child = child_process.spawn(ConfigManager.getJavaExecutable(this.server.rawServer.id), args, {
             cwd: this.gameDir,
@@ -83,9 +83,9 @@ class ProcessBuilder {
             logger.info('Exited with code', code)
             fs.remove(tempNativePath, (err) => {
                 if(err){
-                    logger.warn('Error while deleting temp dir', err)
+                    logger.warn('ERROR : ', err)
                 } else {
-                    logger.info('Temp dir deleted successfully.')
+                    logger.info('임시 디렉토리 삭제 완료')
                 }
             })
         })
@@ -741,7 +741,7 @@ class ProcessBuilder {
                         if(!shouldExclude){
                             fs.writeFile(path.join(tempNativePath, fileName), zipEntries[i].getData(), (err) => {
                                 if(err){
-                                    logger.error('Error while extracting native library:', err)
+                                    logger.error('네이티브 라이브러리를 추출하는 동안 오류 발생:', err)
                                 }
                             })
                         }
@@ -792,7 +792,7 @@ class ProcessBuilder {
                         if(!shouldExclude){
                             fs.writeFile(path.join(tempNativePath, extractName), zipEntries[i].getData(), (err) => {
                                 if(err){
-                                    logger.error('Error while extracting native library:', err)
+                                    logger.error('네이티브 라이브러리를 추출하는 동안 오류 발생:', err)
                                 }
                             })
                         }

@@ -101,7 +101,7 @@ exports.deleteDropinMod = async function(modsDir, fullName){
 
     if(!res.result) {
         shell.beep()
-        console.error('Error deleting drop-in mod.', res.error)
+        console.error('ERROR : ', res.error)
         return false
     }
 
@@ -191,7 +191,7 @@ exports.getEnabledShaderpack = function(instanceDir){
         if(match != null){
             return match[1]
         } else {
-            console.warn('WARNING: Shaderpack regex failed.')
+            console.warn('WARNING: 셰이더 팩 정규식 불일치')
         }
     }
     return 'OFF'

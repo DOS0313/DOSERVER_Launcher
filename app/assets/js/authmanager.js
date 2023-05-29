@@ -172,11 +172,11 @@ exports.removeMojangAccount = async function(uuid){
             ConfigManager.save()
             return Promise.resolve()
         } else {
-            log.error('Error while removing account', response.error)
+            log.error('ERROR : ', response.error)
             return Promise.reject(response.error)
         }
     } catch (err){
-        log.error('Error while removing account', err)
+        log.error('ERROR : ', err)
         return Promise.reject(err)
     }
 }
@@ -194,7 +194,7 @@ exports.removeMicrosoftAccount = async function(uuid){
         ConfigManager.save()
         return Promise.resolve()
     } catch (err){
-        log.error('Error while removing account', err)
+        log.error('ERROR : ', err)
         return Promise.reject(err)
     }
 }
@@ -220,14 +220,14 @@ async function validateSelectedMojangAccount(){
                 ConfigManager.updateMojangAuthAccount(current.uuid, session.accessToken)
                 ConfigManager.save()
             } else {
-                log.error('Error while validating selected profile:', refreshResponse.error)
-                log.info('Account access token is invalid.')
+                log.error('계정 확인 중 오류 발생:', refreshResponse.error)
+                log.info('계정 액세스 토큰이 유효하지 않습니다.')
                 return false
             }
-            log.info('Account access token validated.')
+            log.info('계정 액세스 토큰이 확인되었습니다.')
             return true
         } else {
-            log.info('Account access token validated.')
+            log.info('계정 액세스 토큰이 확인되었습니다.')
             return true
         }
     }

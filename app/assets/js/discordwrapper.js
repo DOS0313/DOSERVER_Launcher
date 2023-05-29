@@ -8,7 +8,7 @@ const { Client } = require('discord-rpc-patch')
 let client
 let activity
 
-exports.initRPC = function(genSettings, servSettings, initialDetails = 'Waiting for Client..'){
+exports.initRPC = function(genSettings, servSettings, initialDetails = '클라이언트를 기다리는 중..'){
     client = new Client({ transport: 'ipc' })
 
     activity = {
@@ -23,15 +23,15 @@ exports.initRPC = function(genSettings, servSettings, initialDetails = 'Waiting 
     }
 
     client.on('ready', () => {
-        logger.info('Discord RPC Connected')
+        logger.info('Discord RPC 연결 완료')
         client.setActivity(activity)
     })
     
     client.login({clientId: genSettings.clientId}).catch(error => {
         if(error.message.includes('ENOENT')) {
-            logger.info('Unable to initialize Discord Rich Presence, no client detected.')
+            logger.info('Discord Rich Presence를 초기화할 수 없습니다. 감지된 클라이언트가 없습니다.')
         } else {
-            logger.info('Unable to initialize Discord Rich Presence: ' + error.message, error)
+            logger.info('Discord Rich Presence 초기화 실패: ' + error.message, error)
         }
     })
 }

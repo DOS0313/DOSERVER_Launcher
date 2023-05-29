@@ -115,9 +115,9 @@ function showFatalStartupError(){
         $('#loadingContainer').fadeOut(250, () => {
             document.getElementById('overlayContainer').style.background = 'none'
             setOverlayContent(
-                'Fatal Error: Unable to Load Distribution Index',
-                'A connection could not be established to our servers to download the distribution index. No local copies were available to load. <br><br>The distribution index is an essential file which provides the latest server information. The launcher is unable to start without it. Ensure you are connected to the internet and relaunch the application.',
-                'Close'
+                'ERROR: 분포 색인을 로드할 수 없음',
+                '분배 인덱스를 다운로드하기 위해 서버에 연결할 수 없습니다. 로드할 로컬 복사본이 없습니다. <br><br>분배 인덱스는 최신 서버 정보를 제공하는 필수 파일입니다. 이 파일 없이는 런처를 시작할 수 없습니다. 인터넷에 연결되어 있는지 확인하고 애플리케이션을 다시 실행하세요.',
+                '취소'
             )
             setOverlayHandler(() => {
                 const window = remote.getCurrentWindow()
@@ -333,10 +333,10 @@ async function validateSelectedAccount(){
             ConfigManager.save()
             const accLen = Object.keys(ConfigManager.getAuthAccounts()).length
             setOverlayContent(
-                'Failed to Refresh Login',
-                `We were unable to refresh the login for <strong>${selectedAcc.displayName}</strong>. Please ${accLen > 0 ? 'select another account or ' : ''} login again.`,
-                'Login',
-                'Select Another Account'
+                'ERROR',
+                `<strong>${selectedAcc.displayName}</strong>의 로그인을 새로 고칠 수 없습니다. ${accLen > 0 ? '다른 계정을 선택하거나 ' : ''} 다시 로그인하세요.`,
+                '로그인',
+                '다른 계정으로 로그인'
             )
             setOverlayHandler(() => {
 
