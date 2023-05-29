@@ -1,14 +1,11 @@
 {
   "name": "doserver",
-  "version": "2.0.4",
-  "productName": "Helios Launcher",
+  "version": "1.0.2",
+  "productName": "DOSERVER",
   "description": "Modded Minecraft Launcher",
-  "author": "Daniel Scalzi (https://github.com/dscalzi/)",
+  "author": "DO_S",
   "license": "UNLICENSED",
-  "homepage": "https://github.com/dscalzi/HeliosLauncher",
-  "bugs": {
-    "url": "https://github.com/dscalzi/HeliosLauncher/issues"
-  },
+  "homepage": "http://doserverxstella.ddns.net/",
   "private": true,
   "main": "index.js",
   "scripts": {
@@ -44,6 +41,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dscalzi/HeliosLauncher.git"
+    "url": "git+https://github.com/DOS0313/DOSERVER_Launcher.git"
   }
 }
